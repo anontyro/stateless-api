@@ -1,7 +1,7 @@
 'use strict';
 
-const connectToDatabase = require('./connect');
-const Film = require('./models/film/filmModels').Film;
+const connectToDatabase = require('../../connect');
+const Film = require('../../models/film/filmModels').Film;
 
 module.exports.getFilms = (event, context, callback) => {
   context.callbackWaitsForEmptyEventLoop = false;

@@ -10,7 +10,7 @@ provider:
 
 functions:
   create:
-    handler: handler.create
+    handler: services/film/handler.create
     events: 
       - http:
           path: film
@@ -18,7 +18,7 @@ functions:
           cors: true
 
   getFilm:
-    handler: handler.getFilm
+    handler: services/film/handler.getFilm
     events:
       - http:
           path: film/{title}
@@ -26,7 +26,7 @@ functions:
           cors: true
 
   getFilms:
-    handler: handler.getFilms
+    handler: services/film/handler.getFilms
     events:
       - http:
           path: films
@@ -34,7 +34,7 @@ functions:
           cors: true
 
   update:
-    handler: handler.update
+    handler: services/film/handler.update
     events:
       - http:
           path: film/{id}
@@ -42,7 +42,7 @@ functions:
           cors: true
 
   delete:
-    handler: handler.delete
+    handler: services/film/handler.delete
     events:
       - http:
           path: film/{id}
