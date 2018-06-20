@@ -49,5 +49,29 @@ functions:
           method: delete
           cors: true
 
+  getUserList:
+    handler: services/auth/handler.getUsers
+    events:
+        - http:
+            path: users
+            method: get
+            cors: true
+
+  postUser:
+    handler: services/auth/handler.register
+    events:
+      - http:
+          path: user
+          method: post
+          cors: true
+
+  deleteUser:
+    handler: services/auth/handler.deleteUser
+    events:
+      - http:
+          path: user/{id}
+          method: delete
+          cors: true
+
 plugins:
 - serverless-offline # adding the plugin to be able to run the offline emulation

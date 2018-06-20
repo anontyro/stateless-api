@@ -1,10 +1,10 @@
 /**
- * User MODEL
+ * PERSON MODEL
  * database model for a person who is signed up for the site
  */
 const mongoose = require('mongoose');
 
-const userModel = mongoose.Schema({
+const personSchema = mongoose.Schema({
     firstname: {type: String, required: true},
     lastname: {type: String, required: true},
     email: {type: String, required: true},
@@ -13,9 +13,11 @@ const userModel = mongoose.Schema({
     verificationLink: {type: String},
 });
 
-const user = mongoose.model('User', userModel);
+const person = mongoose.model('Person', personSchema);
 
 module.exports ={
-    User: user
+    Person: person
 }
+
+
 
