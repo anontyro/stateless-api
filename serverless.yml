@@ -57,11 +57,19 @@ functions:
             method: get
             cors: true
 
-  postUser:
+  register:
     handler: services/auth/handler.register
     events:
       - http:
-          path: user
+          path: register
+          method: post
+          cors: true
+
+  login:
+    handler: services/auth/handler.login
+    events:
+      - http:
+          path: login
           method: post
           cors: true
 

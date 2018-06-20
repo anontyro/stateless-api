@@ -44,6 +44,10 @@ module.exports.login = (event, context, callback) => {
     
     const {email, password} = JSON.parse(event.body);
 
+    if(!email || !password) {
+        throw new Exception('not all fields');
+    }
+
     connectToDatabase()
         .then(() => {
             User.findOne({email: email})
@@ -56,7 +60,9 @@ module.exports.login = (event, context, callback) => {
                     callback(null, {statusCode: 200,body: JSON.stringify({auth: true, token: token})})
                 })
                 .catch(err => callback(null, {
-
+                    status: 401,
+                    headers: { 'Content-Type': 'text/plain' },
+                    body: 'username or password incorrect'     
                 }));
         });
 }
