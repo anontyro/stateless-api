@@ -4,7 +4,7 @@ var bcrypt = require('bcryptjs');
 require('dotenv').config()
 const connectToDatabase = require('../../connect');
 const User = require('../../models/auth/personSchema').Person;
-
+const policyCreation = require('../../utils/auth/auth').buildIAMPolicy;
 
 module.exports.register = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
@@ -56,7 +56,7 @@ module.exports.login = (event, context, callback) => {
                     if(!validate) {
                         throw new Exception('Not authorised');
                     }
-                    const token = jwt.sign({id: user._id},process.env.JWT_SECRET,{expiresIn: 86400});
+                    const token = jwt.sign({id: user._id, username: user.email},process.env.JWT_SECRET,{expiresIn: 86400});
                     callback(null, {statusCode: 200,body: JSON.stringify({auth: true, token: token})})
                 })
                 .catch(err => callback(null, {
@@ -103,3 +103,39 @@ module.exports.deleteUser = (event, context, callback) => {
                 }))
         })
 }
+
+module.exports.isUserAuthorised = (event, context, callback) => {
+    context.callbackWaitsForEmptyEventLoop = false;
+
+    const token = event.authorizationToken;
+    
+    try{
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded.id;
+        console.log(decoded);
+
+        userLookupById(userId, user => {
+            const isAllowed = true;
+            const authContext = {user: JSON.stringify({ id: user._id, username: user.email, firstname: user.firstname, lastname: user.lastname})};
+            const policy = policyCreation(userId, isAllowed, event.methodArn, authContext);
+            console.log(policy);
+            callback(null, policy);
+        })
+
+    }
+    catch(ex) {
+        callback('Unauthorized');
+    }
+};
+
+const userLookupById = (id, callback) => {
+    connectToDatabase()
+        .then(() => {
+            User.findById(id)
+                .then(user => callback(user) )
+                .catch(err => {
+                    console.error(err);
+                    throw new Exception(err);
+                })
+        });
+};

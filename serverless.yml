@@ -9,6 +9,8 @@ provider:
   region: us-east-1
 
 functions:
+  authorise: 
+    handler: services/auth/handler.isUserAuthorised
   create:
     handler: services/film/handler.create
     events: 
@@ -40,6 +42,7 @@ functions:
           path: film/{id}
           method: put
           cors: true
+          authorizer: authorise
 
   delete:
     handler: services/film/handler.delete
@@ -48,6 +51,7 @@ functions:
           path: film/{id}
           method: delete
           cors: true
+          authorizer: authorise
 
   getUserList:
     handler: services/auth/handler.getUsers
@@ -56,6 +60,7 @@ functions:
             path: users
             method: get
             cors: true
+            authorizer: authorise
 
   register:
     handler: services/auth/handler.register
@@ -80,6 +85,7 @@ functions:
           path: user/{id}
           method: delete
           cors: true
+          authorizer: authorise
 
 plugins:
 - serverless-offline # adding the plugin to be able to run the offline emulation
