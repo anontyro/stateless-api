@@ -118,7 +118,6 @@ module.exports.isUserAuthorised = (event, context, callback) => {
             const isAllowed = 'Allow';
             const authContext = {user: JSON.stringify({ id: user._id, username: user.email, firstname: user.firstname, lastname: user.lastname})};
             const policy = policyCreation(userId, isAllowed, event.methodArn, authContext);
-            console.log(policy);
             callback(null, policy);
         })
 
