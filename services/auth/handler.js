@@ -6,6 +6,8 @@ const connectToDatabase = require('../../connect');
 const User = require('../../models/auth/personSchema').Person;
 const policyCreation = require('../../utils/auth/auth').buildIAMPolicy;
 
+const auth = require('../../services/auth/auth');
+
 module.exports.register = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
     
@@ -44,27 +46,41 @@ module.exports.login = (event, context, callback) => {
     
     const {email, password} = JSON.parse(event.body);
 
-    if(!email || !password) {
-        throw new Exception('not all fields');
+    try {
+        auth.login(email, password, response =>{
+            callback(null, response);
+        })
+    } catch (ex) {
+        callback(null, {
+            statusCode: 401,
+            headers: {'Content-Type': 'text/plain'},
+            body: 'username or password incorrect',
+            error: ex
+        });
     }
 
-    connectToDatabase()
-        .then(() => {
-            User.findOne({email: email})
-                .then(user => {
-                    const validate = bcrypt.compareSync(password, user.password);
-                    if(!validate) {
-                        throw new Exception('Not authorised');
-                    }
-                    const token = jwt.sign({id: user._id, username: user.email},process.env.JWT_SECRET,{expiresIn: 86400});
-                    callback(null, {statusCode: 200,body: JSON.stringify({auth: true, token: token})})
-                })
-                .catch(err => callback(null, {
-                    status: 401,
-                    headers: { 'Content-Type': 'text/plain' },
-                    body: 'username or password incorrect'     
-                }));
-        });
+
+    // if(!email || !password) {
+    //     throw new Exception('not all fields');
+    // }
+
+    // connectToDatabase()
+    //     .then(() => {
+    //         User.findOne({email: email})
+    //             .then(user => {
+    //                 const validate = bcrypt.compareSync(password, user.password);
+    //                 if(!validate) {
+    //                     throw new Exception('Not authorised');
+    //                 }
+    //                 const token = jwt.sign({id: user._id, username: user.email},process.env.JWT_SECRET,{expiresIn: 86400});
+    //                 callback(null, {statusCode: 200,body: JSON.stringify({auth: true, token: token})})
+    //             })
+    //             .catch(err => callback(null, {
+    //                 status: 401,
+    //                 headers: { 'Content-Type': 'text/plain' },
+    //                 body: 'username or password incorrect'     
+    //             }));
+    //     });
 }
 
 module.exports.getUsers = (event, context, callback) => {
