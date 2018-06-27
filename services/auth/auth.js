@@ -3,7 +3,7 @@ var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 require('dotenv').config()
 const mongoose = require('mongoose');
-const policyCreation = require('../../utils/auth/auth').buildIAMPolicy;
+const util = require('../../utils/auth/auth');
 const connectToDatabase = require('../../connect');
 
 const User = require('../../models/auth/personSchema').Person;
@@ -19,11 +19,23 @@ module.exports.login = (email, password, callback)  => {
             User.findOne({email: email})
                 .then(user => {
                     if(!user.verified){
-                        reject('User is not verified');
+                        callback({
+                            statusCode: 401,
+                            body: JSON.stringify({
+                                error: 'user is not verified, unable to login',
+                                username: user.email
+                            })
+                        });
                     }
                     const validate = bcrypt.compareSync(password, user.password);
                     if(!validate) {
-                        reject('password is incorrect');
+                        callback({
+                            statusCode: 401,
+                            body: JSON.stringify({
+                                error: 'password is not correct',
+                                username: user.email
+                            })
+                        });
                     }
                     const token = jwt.sign(
                         {id: user._id, username: user.email}, 
