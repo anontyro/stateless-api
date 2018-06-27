@@ -11,34 +11,21 @@ const auth = require('../../services/auth/auth');
 module.exports.register = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
     
-    const {firstname, lastname ,email, password} = JSON.parse(event.body);
+    // const {firstname, lastname ,email, password} = JSON.parse(event.body);
 
-    if(!firstname || !lastname || !email || !password) {
-        throw new Exception('missing fields');
+    try{
+        auth.register(event, response => {
+            callback(null,response);
+        });
     }
-
-    const hashedPass = bcrypt.hashSync(password, 8);
-
-    connectToDatabase()
-    .then(() => {
-        User.create({
-            firstname: firstname,
-            lastname: lastname,
-            email: email,
-            password: hashedPass,
-            verified: false
-        })
-            .then(user => {
-                    const token = jwt.sign({id: user._id},process.env.JWT_SECRET,{expiresIn: 86400})
-                    callback(null, {statusCode: 200,body: JSON.stringify({auth: true, token: token})})
-                })
-            .catch(err => callback(null, {
-                statusCode: err.statusCode || 500,
-                headers: { 'Content-Type': 'text/plain' },
-                body: 'Could not fetch the film list.'
-            }));
-        
-    });
+    catch(ex) {
+        console.err(ex);
+        callback(null, {
+            statusCode: ex.statusCode || 500,
+            headers: { 'Content-Type': 'text/plain' },
+            body: 'An error occured whilst trying to create a new user.'
+        });
+    }
 }
 
 module.exports.login = (event, context, callback) => {
@@ -59,28 +46,6 @@ module.exports.login = (event, context, callback) => {
         });
     }
 
-
-    // if(!email || !password) {
-    //     throw new Exception('not all fields');
-    // }
-
-    // connectToDatabase()
-    //     .then(() => {
-    //         User.findOne({email: email})
-    //             .then(user => {
-    //                 const validate = bcrypt.compareSync(password, user.password);
-    //                 if(!validate) {
-    //                     throw new Exception('Not authorised');
-    //                 }
-    //                 const token = jwt.sign({id: user._id, username: user.email},process.env.JWT_SECRET,{expiresIn: 86400});
-    //                 callback(null, {statusCode: 200,body: JSON.stringify({auth: true, token: token})})
-    //             })
-    //             .catch(err => callback(null, {
-    //                 status: 401,
-    //                 headers: { 'Content-Type': 'text/plain' },
-    //                 body: 'username or password incorrect'     
-    //             }));
-    //     });
 }
 
 module.exports.getUsers = (event, context, callback) => {
