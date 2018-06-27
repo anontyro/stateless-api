@@ -8,11 +8,16 @@ const policyCreation = require('../../utils/auth/auth').buildIAMPolicy;
 
 const auth = require('../../services/auth/auth');
 
+/**
+ * Method used to register a new user in the database
+ * the inital user created will be not authorized initally and must be verifed
+ * @param {*} event must contain a JSON body with {firstname, lastname, email, password}
+ * @param {*} context 
+ * @param {*} callback lambda callback first value must be null second is a JSON object
+ */
 module.exports.register = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
     
-    // const {firstname, lastname ,email, password} = JSON.parse(event.body);
-
     try{
         auth.register(event, response => {
             callback(null,response);
@@ -28,6 +33,13 @@ module.exports.register = (event, context, callback) => {
     }
 }
 
+/**
+ * Login method used to create a JWT for the user
+ * this methodchecks if the user account is verified if not it will reject
+ * @param {*} event body is JSON and must contain {email, password}
+ * @param {*} context 
+ * @param {*} callback 
+ */
 module.exports.login = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
     
@@ -48,6 +60,14 @@ module.exports.login = (event, context, callback) => {
 
 }
 
+/**
+ * Admin method used to return all the users in teh database
+ * will return a restricted list not all data from the table
+ * requires Authorization header with the JWT present
+ * @param {*} event 
+ * @param {*} context 
+ * @param {*} callback 
+ */
 module.exports.getUsers = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
@@ -67,6 +87,14 @@ module.exports.getUsers = (event, context, callback) => {
 
 }
 
+/**
+ * Method used to remove users from the database
+ * this requires the _id in the url
+ * requiresd Authorization token in the header
+ * @param {*} event path parameter of id using the user _id value
+ * @param {*} context 
+ * @param {*} callback 
+ */
 module.exports.deleteUser = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
@@ -108,6 +136,7 @@ module.exports.isUserAuthorised = (event, context, callback) => {
     }
 };
 
+// helper method to be moved
 const userLookupById = (id, callback) => {
     connectToDatabase()
         .then(() => {
