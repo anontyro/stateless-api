@@ -89,3 +89,23 @@ module.exports.register = (event, callback) => {
 
 }
 
+module.exports.getUserList = (callback) => {
+
+    const retUsers = {
+        password: false,
+        __v: false
+    }
+
+    connectToDatabase()
+        .then(() => {
+            User.find({}, retUsers)
+                .then(userList => callback({
+                    statusCode: 200,
+                    body: JSON.stringify({
+                        userList: userList
+                    })
+                }));
+        })
+
+}
+

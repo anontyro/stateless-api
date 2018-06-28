@@ -71,19 +71,19 @@ module.exports.login = (event, context, callback) => {
 module.exports.getUsers = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
-    connectToDatabase()
-        .then(() => {
-            User.find()
-                .then(userList => callback(null, {
-                    status: 200,
-                    body: JSON.stringify(userList)
-                }))
-                .catch(err => callback(null, {
-                    statusCode: err.statusCode || 500,
-                    headers: { 'Content-Type': 'text/plain' },
-                    body: 'Could not fetch the users list.'
-                }));
+    try {
+        auth.getUserList(list => {
+            console.log(list);
+            callback(null, list);
+        })
+    } catch (ex) {
+        callback(null, {
+            statusCode: 400,
+            headers: {'Content-Type': 'text/plain'},
+            body: 'an error occured whilst getting user data',
+            error: ex
         });
+    }
 
 }
 
