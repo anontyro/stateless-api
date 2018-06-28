@@ -8,6 +8,15 @@ const connectToDatabase = require('../../connect');
 
 const User = require('../../models/auth/personSchema').Person;
 
+/**
+ * Login logic that will first check for email and password
+ * then check the database if it finds the user is not validatd
+ * it will throw an error, if all is good returns
+ * the JWT
+ * @param {*} email users unique email
+ * @param {*} password users password
+ * @param {*} callback 
+ */
 module.exports.login = (email, password, callback)  => {
 
     if(!email || !password) {
@@ -53,6 +62,13 @@ module.exports.login = (email, password, callback)  => {
 
 }
 
+/**
+ * Method used to allow a user to register for hte site
+ * by default users are not verfied, as this is for a private site
+ * this will be manually done
+ * @param {*} event 
+ * @param {*} callback 
+ */
 module.exports.register = (event, callback) => {
     const {firstname, lastname, email, password} = JSON.parse(event.body);
 
@@ -89,6 +105,33 @@ module.exports.register = (event, callback) => {
 
 }
 
+/**
+ * logic to find the user in the database and remove them
+ * @param {*} userId unique mongodb _id
+ * @param {*} callback 
+ */
+module.exports.deleteUserById = (userId, callback) => {
+    connectToDatabase()
+        .then(() => {
+            User.findByIdAndRemove(userId)
+                .then(user => callback({
+                    statusCode: 200,
+                    body: JSON.stringify({
+                        userId: userId,
+                        message: 'successfully removed user from the database',
+                        user: user
+                    })
+                }))
+        })
+        .catch(err => callback('unable to remove user'));
+}
+
+/**
+ * logic used to return a restircted list of users in the database
+ * other fields can be hidden if required and params can be added to
+ * filter the list more
+ * @param {*} callback 
+ */
 module.exports.getUserList = (callback) => {
 
     const retUsers = {
@@ -106,6 +149,7 @@ module.exports.getUserList = (callback) => {
                     })
                 }));
         })
+        .catch(err => callback('unable to get user list'));
 
 }
 
