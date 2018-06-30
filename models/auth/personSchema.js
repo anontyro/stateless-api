@@ -10,7 +10,8 @@ const personSchema = mongoose.Schema({
     email: {
         type: String, 
         match: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-        required: true
+        required: true,
+        unique: true
     },
     password: {type: String, required: true},
     verified: {type: Boolean},
