@@ -11,6 +11,7 @@ provider:
 functions:
   authorise: 
     handler: services/auth/handler.isUserAuthorised
+
   create:
     handler: services/film/handler.create
     events: 
@@ -18,6 +19,7 @@ functions:
           path: film
           method: post
           cors: true
+          authorizer: authorise
 
   getFilm:
     handler: services/film/handler.getFilm
@@ -53,6 +55,7 @@ functions:
           cors: true
           authorizer: authorise
 
+# AUTH CONTROLS --------------------------------------
   getUserList:
     handler: services/auth/handler.getUsers
     events:
@@ -86,6 +89,39 @@ functions:
           method: delete
           cors: true
           authorizer: authorise
+
+# Blog Endpoints -------------------------------------
+
+getBlogs:
+  handler: services/blog/handler.getBlogs
+  events:
+    - http:
+        path: blog
+        method: get
+        cors: true
+
+getBlog:
+  handler: services/blog/handler.getBlog
+    - http:
+        path: blog/{slug}
+        method: get
+        cors: true
+
+createBlog:
+  handler: services/blog/handler.createBlog
+    - http:
+        path: blog
+        method: post
+        cors: true
+        authorizer: authorise
+
+deleteBlog:
+  handler: services/blog/handler.deleteBlog
+  - http:
+      path: blog/{id}
+      method: delete
+      cors: true
+      authorizer: authorise
 
 plugins:
 - serverless-offline # adding the plugin to be able to run the offline emulation
