@@ -105,6 +105,43 @@ module.exports.register = (event, callback) => {
 
 }
 
+module.exports.updatePassword = (username, oldPassword, newPassword, callback) => {
+    connectToDatabase()
+        .then(() => {
+            User.findOne({email: username})
+                .then(user => {
+                    const validate = bcrypt.compareSync(oldPassword, user.password);
+                    if(!validate) {
+                        callback({
+                            statusCode: 401,
+                            body: JSON.stringify({
+                                error: 'password is not correct',
+                                username: user.email
+                            })
+                        });
+                    }
+
+                    const hashedNewPass = bcrypt.hashSync(newPassword, 8);
+                    User.findByIdAndUpdate(user._id, {password: hashedNewPass})
+                        .then(updated => {
+                            callback({
+                                statusCode: 200,
+                                body: JSON.stringify({
+                                    message: 'User password has been successfully updated for: ' + user.email
+                                })
+                            })
+                        })
+                })
+                .catch(ex => callback({
+                    statusCode: 400,
+                    body: JSON.stringify({
+                        message: 'Unable to update user password',
+                        error: ex
+                    })
+                }))
+        })
+}
+
 /**
  * logic to find the user in the database and remove them
  * @param {*} userId unique mongodb _id

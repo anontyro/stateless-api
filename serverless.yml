@@ -81,6 +81,14 @@ functions:
           method: post
           cors: true
 
+  updatePassword:
+    handler: services/auth/handler.updateUserPassword
+    events:
+      - http:
+          path: updatepassword
+          method: update
+          cors: true
+
   deleteUser:
     handler: services/auth/handler.deleteUser
     events:

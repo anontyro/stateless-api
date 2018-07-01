@@ -87,6 +87,25 @@ module.exports.getUsers = (event, context, callback) => {
 
 }
 
+module.exports.updateUserPassword = (event, context, callback) => {
+    context.callbackWaitsForEmptyEventLoop = false;
+
+    const {username, currentPassword, newPassword} = JSON.parse(event.body);
+
+    try{
+        auth.updatePassword(username, currentPassword, newPassword, updated =>{
+            callback(null, updated)
+        });
+    } catch(ex) {
+        callback(null, {
+            statusCode: 400,
+            headers: {'Content-Type': 'text/plain'},
+            body: 'an error occured whilst getting user data',
+            error: ex
+        });
+    }
+}
+
 /**
  * Method used to remove users from the database
  * this requires the _id in the url
