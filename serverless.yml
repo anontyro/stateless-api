@@ -86,7 +86,7 @@ functions:
     events:
       - http:
           path: updatepassword
-          method: update
+          method: put
           cors: true
 
   deleteUser:
@@ -110,6 +110,7 @@ getBlogs:
 
 getBlog:
   handler: services/blog/handler.getBlog
+  events:  
     - http:
         path: blog/{slug}
         method: get
@@ -117,6 +118,7 @@ getBlog:
 
 createBlog:
   handler: services/blog/handler.createBlog
+  events:  
     - http:
         path: blog
         method: post
@@ -125,6 +127,7 @@ createBlog:
 
 deleteBlog:
   handler: services/blog/handler.deleteBlog
+  events:  
   - http:
       path: blog/{id}
       method: delete
