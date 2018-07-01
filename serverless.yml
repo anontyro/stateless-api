@@ -64,6 +64,10 @@ functions:
           authorizer: authorise
 
 # AUTH CONTROLS --------------------------------------
+
+  # Get a list of all users in the database, this returns a restricted list
+  # to prevent senstaive data being passed back
+  # requires JWT to access
   getUserList:
     handler: services/auth/handler.getUsers
     events:
@@ -73,6 +77,8 @@ functions:
             cors: true
             authorizer: authorise
 
+  # Post a new user, by default the user will be unverified and must be manually
+  # verified to prevent unwanted access to the site content
   register:
     handler: services/auth/handler.register
     events:
@@ -81,6 +87,9 @@ functions:
           method: post
           cors: true
 
+  # Post a user login, requires username(email) and password which will be checked
+  # in the database to ensure the user details are correct.
+  # returns JWT in token
   login:
     handler: services/auth/handler.login
     events:
@@ -89,6 +98,17 @@ functions:
           method: post
           cors: true
 
+  updateUser:
+    handler: services/auth/handler.updateUser
+    events:
+      - http:
+          path: user
+          method: put
+          cors: true
+          authorizer: authorise
+
+  # Put request used to update the users password
+  # requires username(email), old password and new password
   updatePassword:
     handler: services/auth/handler.updateUserPassword
     events:

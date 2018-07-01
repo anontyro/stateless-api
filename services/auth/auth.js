@@ -105,6 +105,26 @@ module.exports.register = (event, callback) => {
 
 }
 
+module.exports.updateUser = (user, callback) => {
+   connectToDatabase()
+    .then(() => {
+        User.findByIdAndUpdate(user._id, {
+            firstname: user.firstname,
+            lastname: user.lastname,
+            verified: user.verified
+        })
+        .then(updated => {
+            callback({
+                statusCode: 200,
+                body: JSON.stringify({
+                    message: user.email + ' has been successfully updated'
+                })
+            })
+        })
+    })
+    .catch(err => callback('unable to update user'));
+}
+
 module.exports.updatePassword = (event, callback) => {
     
     const {username, oldPassword, newPassword} = JSON.parse(event.body);    

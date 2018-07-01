@@ -87,6 +87,27 @@ module.exports.getUsers = (event, context, callback) => {
 
 }
 
+module.exports.updateUser = (event, context, callback) => {
+    context.callbackWaitsForEmptyEventLoop = false;
+
+    const user = JSON.parse(event.body.user);
+
+    try{ 
+        auth.updateUser(user, updated => callback(null, updated));
+    } catch (ex) {
+        callback(null, {
+            statusCode: 400,
+            body: JSON.stringify({
+                message: 'an error occured whilst updating user password',
+                error: ex,
+                response: ex.message
+            })
+        });       
+    }
+
+
+}
+
 module.exports.updateUserPassword = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
