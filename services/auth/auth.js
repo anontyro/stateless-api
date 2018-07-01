@@ -117,7 +117,7 @@ module.exports.updateUser = (user, callback) => {
             callback({
                 statusCode: 200,
                 body: JSON.stringify({
-                    message: user.email + ' has been successfully updated'
+                    message: user.email? user.email: user.firstname + ' has been successfully updated'
                 })
             })
         })
