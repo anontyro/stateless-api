@@ -106,13 +106,22 @@ module.exports.register = (event, callback) => {
 }
 
 module.exports.updateUser = (user, callback) => {
+    
+    const updateModel =  JSON.parse(JSON.stringify(user));
+    updateModel
+    delete updateModel._id;
+
+    if( updateModel.password) {
+        delete updateModel.password;
+    }
+
+    if( updateModel.email) {
+        delete updateModel.email;
+    }
+    
    connectToDatabase()
     .then(() => {
-        User.findByIdAndUpdate(user._id, {
-            firstname: user.firstname,
-            lastname: user.lastname,
-            verified: user.verified
-        })
+        User.findByIdAndUpdate(user._id, updateModel)
         .then(updated => {
             callback({
                 statusCode: 200,
