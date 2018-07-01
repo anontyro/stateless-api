@@ -105,7 +105,18 @@ module.exports.register = (event, callback) => {
 
 }
 
-module.exports.updatePassword = (username, oldPassword, newPassword, callback) => {
+module.exports.updatePassword = (event, callback) => {
+    
+    const {username, oldPassword, newPassword} = JSON.parse(event.body);    
+
+    if(!username || !oldPassword || !newPassword) {
+        throw new Error('not all fields are present in request');
+    }
+
+    if(newPassword === oldPassword) {
+        throw new Error('new password cannot be the same as the current password');
+    }
+    
     connectToDatabase()
         .then(() => {
             User.findOne({email: username})

@@ -9,9 +9,31 @@ provider:
   region: us-east-1
 
 functions:
+  #call to validate endpoints with JWT
   authorise: 
     handler: services/auth/handler.isUserAuthorised
 
+  # FILM Endpoints ----------------------------------------------------------
+
+  # Get the complete list of films in the database
+  getFilms:
+    handler: services/film/handler.getFilms
+    events:
+      - http:
+          path: films
+          method: get
+          cors: true
+
+  # Get a specific film by title partial
+  getFilm:
+    handler: services/film/handler.getFilm
+    events:
+      - http:
+          path: film/{title}
+          method: get
+          cors: true
+
+  # Post a new film, requires user to be logged in
   create:
     handler: services/film/handler.create
     events: 
@@ -21,22 +43,7 @@ functions:
           cors: true
           authorizer: authorise
 
-  getFilm:
-    handler: services/film/handler.getFilm
-    events:
-      - http:
-          path: film/{title}
-          method: get
-          cors: true
-
-  getFilms:
-    handler: services/film/handler.getFilms
-    events:
-      - http:
-          path: films
-          method: get
-          cors: true
-
+  # Put film values, requires user to be logged in
   update:
     handler: services/film/handler.update
     events:
@@ -46,6 +53,7 @@ functions:
           cors: true
           authorizer: authorise
 
+  # Delete a film from the database, requires user to be logged in
   delete:
     handler: services/film/handler.delete
     events:

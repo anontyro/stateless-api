@@ -90,18 +90,18 @@ module.exports.getUsers = (event, context, callback) => {
 module.exports.updateUserPassword = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
-    const {username, currentPassword, newPassword} = JSON.parse(event.body);
-
     try{
-        auth.updatePassword(username, currentPassword, newPassword, updated =>{
+        auth.updatePassword(event, updated =>{
             callback(null, updated)
         });
     } catch(ex) {
         callback(null, {
             statusCode: 400,
-            headers: {'Content-Type': 'text/plain'},
-            body: 'an error occured whilst getting user data',
-            error: ex
+            body: JSON.stringify({
+                message: 'an error occured whilst updating user password',
+                error: ex,
+                response: ex.message
+            })
         });
     }
 }
