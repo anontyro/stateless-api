@@ -99,14 +99,14 @@ module.exports.deleteBlogById = (id, callback) => {
 }
 
 // remove the spaces from the title and make it a slug
-slugifyTitle = (title) => {
+const slugifyTitle = (title) => {
     return new Promise( (resolve, reject) => {
         resolve(title.replace(/\s/g, '_'));
     })
 }
 
 // check the database for a unique value for the current slug
-getUniqueSlug = (slug, callback) => {
+const getUniqueSlug = (slug, callback) => {
     const rand = util(1, 99);
     const nextSlug = slug + '_' + rand;
 

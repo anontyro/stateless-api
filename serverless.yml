@@ -128,39 +128,39 @@ functions:
 
 # Blog Endpoints -------------------------------------
 
-getBlogs:
-  handler: services/blog/handler.getBlogs
-  events:
-    - http:
-        path: blog
-        method: get
-        cors: true
+  getBlogs:
+    handler: services/blog/handler.getBlogs
+    events:
+      - http:
+          path: blog
+          method: get
+          cors: true
 
-getBlog:
-  handler: services/blog/handler.getBlog
-  events:  
-    - http:
-        path: blog/{slug}
-        method: get
-        cors: true
+  getBlog:
+    handler: services/blog/handler.getBlog
+    events:  
+      - http:
+          path: blog/{slug}
+          method: get
+          cors: true
 
-createBlog:
-  handler: services/blog/handler.createBlog
-  events:  
+  createBlog:
+    handler: services/blog/handler.createBlog
+    events:  
+      - http:
+          path: blog
+          method: post
+          cors: true
+          authorizer: authorise
+
+  deleteBlog:
+    handler: services/blog/handler.deleteBlog
+    events:  
     - http:
-        path: blog
-        method: post
+        path: blog/{id}
+        method: delete
         cors: true
         authorizer: authorise
-
-deleteBlog:
-  handler: services/blog/handler.deleteBlog
-  events:  
-  - http:
-      path: blog/{id}
-      method: delete
-      cors: true
-      authorizer: authorise
 
 plugins:
 - serverless-offline # adding the plugin to be able to run the offline emulation

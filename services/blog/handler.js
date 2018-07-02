@@ -41,7 +41,7 @@ module.exports.getBlog =(event, context, callback) => {
 
 }
 
-module.exports.createBlog =(event, context, callback) => {
+module.exports.createBlog = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
     try {
@@ -56,6 +56,11 @@ module.exports.createBlog =(event, context, callback) => {
             body: 'An error occured whilst trying to return the blog list'
         });
     }
+}
+
+module.exports.updateBlog = (event,context, callback) => {
+    context.callbackWaitsForEmptyEventLoop = false;
+    
 }
 
 module.exports.deleteBlog =(event, context, callback) => {
