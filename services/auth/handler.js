@@ -70,7 +70,7 @@ module.exports.login = (event, context, callback) => {
  */
 module.exports.getUsers = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
-
+    console.log(event.requestContext.authorizer);
     try {
         auth.getUserList(list => {
             console.log(list);
@@ -154,7 +154,14 @@ module.exports.deleteUser = (event, context, callback) => {
     }
 }
 
-// method used to test if the user is authorised currently not in use
+/**
+ * Basic authorization method that checks the users JWT before
+ * allowing them access to the application
+ * currently basic logic and not many policies
+ * @param {*} event 
+ * @param {*} context 
+ * @param {*} callback 
+ */
 module.exports.isUserAuthorised = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
