@@ -49,7 +49,7 @@ module.exports.createBlog = (event, context, callback) => {
             callback(null, response);
         })
     } catch(ex) {
-        console.err(ex);
+        console.error(ex);
         callback(null, {
             statusCode: ex.statusCode || 500,
             headers: { 'Content-Type': 'text/plain' },

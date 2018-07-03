@@ -13,7 +13,7 @@ const Blog = require('../../models/blog/blogSchema').Blog;
 
 module.exports.getblogs = (callback) => {
     const query = {
-        draft: false
+        // draft: false
     };
 
     connectToDatabase()
@@ -56,10 +56,10 @@ module.exports.createBlog = (event, callback) => {
     }
 
     if(blog.title.length < 5 || blog.body.length < 50) {
-        throw new Error('Title and bodt must have minimum content');
+        throw new Error('Title and body must have minimum content');
     }
 
-    getUniqueSlug(title.replace(/\s/g, '_'), uniqueSlug => {
+    getUniqueSlug(blog.title.replace(/\s/g, '_'), uniqueSlug => {
         
         blog.slug = uniqueSlug;
         
@@ -107,14 +107,14 @@ const slugifyTitle = (title) => {
 
 // check the database for a unique value for the current slug
 const getUniqueSlug = (slug, callback) => {
-    const rand = util(1, 99);
+    const rand = util.getRandomNumber(1, 99);
     const nextSlug = slug + '_' + rand;
 
     connectToDatabase()
         .then(() => {
             Blog.find({slug: nextSlug})
             .then(results => {
-                if(!results) {
+                if(results.length == 0) {
                     callback(nextSlug);
                 } else {
                     getUniqueSlug(slug, callback);
