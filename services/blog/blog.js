@@ -12,8 +12,10 @@ const Blog = require('../../models/blog/blogSchema').Blog;
 
 
 module.exports.getblogs = (callback) => {
+    const dt = moment().toDate();
     const query = {
-        // draft: false
+        draft: false,
+        publish: {$lte: dt}
     };
 
     connectToDatabase()
