@@ -162,5 +162,13 @@ functions:
         cors: true
         authorizer: authorise
 
+# Resume Table -------------------------------------------
+
+
+# Portfolio Table ----------------------------------------
+
+  
+# Site Settings table ------------------------------------
+
 plugins:
 - serverless-offline # adding the plugin to be able to run the offline emulation

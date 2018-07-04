@@ -38,7 +38,10 @@ const blogSchema = mongoose.Schema({
     coverImg: {
         type: String,
         default: ''
-    }
+    },
+    tags: [{
+        type: String
+    }]
 });
 
 const blog = mongoose.model('Blog', blogSchema);
