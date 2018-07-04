@@ -82,6 +82,30 @@ module.exports.createBlog = (event, callback) => {
     });
 }
 
+module.exports.updateBlog = (event, callback) => {
+    const blog = JSON.parse(event.body);
+    if(blog.slug) { 
+        delete blog.slug;
+    }
+    
+    blog.lastModified = Date.now;
+
+    connectToDatabase()
+        .then(() => {
+            Blog.findByIdAndUpdate(blog._id, blog)
+                .then(updated => {
+                    callback({
+                        statusCode: 200,
+                        body: JSON.stringify({
+                            message: blog.title + ' has been successfully updated'
+                        })
+                    })
+                })
+        })
+        .catch(err => callback('unable to update blog entry: ') + blog._id);
+
+}
+
 module.exports.deleteBlogById = (id, callback) => {
     connectToDatabase()
         .then(() => {

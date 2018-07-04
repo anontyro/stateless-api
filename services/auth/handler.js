@@ -91,7 +91,6 @@ module.exports.updateUser = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
     const user = JSON.parse(event.body);
-    console.log(user);
 
     try{ 
         auth.updateUser(user, updated => callback(null, updated));
