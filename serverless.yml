@@ -134,6 +134,14 @@ functions:
 
 # Resume Table -------------------------------------------
 
+  getResumes:
+    handler: services/resume/handler.getResumes
+    events:
+    - http:
+        path: resumes
+        method: get
+        cors: true
+
   getResume:
     handler: services/resume/handler.getResume
     events:
@@ -158,13 +166,22 @@ functions:
           path: resume
           method: put
           cors: true
-          authorizer: authorise          
+          authorizer: authorise  
+          
+  patchResumeActive:
+      handler: services/resume/handler.patchResumeActive
+      events:
+      - http:
+          path: resume
+          method: patch
+          cors: true
+          authorizer: authorise 
   
   deleteResume:
       handler: services/resume/handler.deleteResume
       events:
       - http:
-          path: resume
+          path: resume/{id}
           method: delete
           cors: true
           authorizer: authorise

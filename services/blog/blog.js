@@ -1,9 +1,6 @@
 'use strict'
 
-var jwt = require('jsonwebtoken');
-var bcrypt = require('bcryptjs');
 require('dotenv').config()
-const mongoose = require('mongoose');
 const util = require('../../utils/utils');
 const moment = require('moment');
 const connectToDatabase = require('../../connect');
