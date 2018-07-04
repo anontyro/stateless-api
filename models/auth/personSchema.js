@@ -13,9 +13,23 @@ const personSchema = mongoose.Schema({
         required: true,
         unique: true
     },
-    password: {type: String, required: true},
-    verified: {type: Boolean},
-    verificationLink: {type: String},
+    contactNumber: {
+        type: String
+    },
+    website: {
+        type: String
+    },
+    password: {
+        type: String, 
+        required: true
+    },
+    verified: {
+        type: Boolean,
+        default: false
+    },
+    verificationLink: {
+        type: String
+    },
     createdDate: {
         type: Date,
         default: Date.now
