@@ -24,45 +24,6 @@ functions:
           method: get
           cors: true
 
-  # Get a specific film by title partial
-  getFilm:
-    handler: services/film/handler.getFilm
-    events:
-      - http:
-          path: film/{title}
-          method: get
-          cors: true
-
-  # Post a new film, requires user to be logged in
-  create:
-    handler: services/film/handler.create
-    events: 
-      - http:
-          path: film
-          method: post
-          cors: true
-          authorizer: authorise
-
-  # Put film values, requires user to be logged in
-  update:
-    handler: services/film/handler.update
-    events:
-      - http:
-          path: film/{id}
-          method: put
-          cors: true
-          authorizer: authorise
-
-  # Delete a film from the database, requires user to be logged in
-  delete:
-    handler: services/film/handler.delete
-    events:
-      - http:
-          path: film/{id}
-          method: delete
-          cors: true
-          authorizer: authorise
-
 # AUTH CONTROLS --------------------------------------
 
   # Get a list of all users in the database, this returns a restricted list
@@ -167,7 +128,7 @@ functions:
 
 # Portfolio Table ----------------------------------------
 
-  
+
 # Site Settings table ------------------------------------
 
 plugins:
