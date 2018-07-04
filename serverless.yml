@@ -114,6 +114,15 @@ functions:
           cors: true
           authorizer: authorise
 
+  updateBlog:
+    handler: services/blog/handler.updateBlog
+    events:  
+      - http:
+          path: blog
+          method: put
+          cors: true
+          authorizer: authorise
+
   deleteBlog:
     handler: services/blog/handler.deleteBlog
     events:  
@@ -125,6 +134,15 @@ functions:
 
 # Resume Table -------------------------------------------
 
+  getResume:
+    handler: services/resume/handler.getResume
+    events:
+    - http:
+        path: resume
+        method: get
+        cors: true
+
+  
 
 # Portfolio Table ----------------------------------------
 

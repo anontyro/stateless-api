@@ -61,6 +61,18 @@ module.exports.createBlog = (event, context, callback) => {
 module.exports.updateBlog = (event,context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
     
+    try {
+        blog.updateBlog(event, response => {
+            callback(null, response);
+        })
+    } catch(ex) {
+        console.error(ex);
+        callback(null, {
+            statusCode: ex.statusCode || 500,
+            headers: { 'Content-Type': 'text/plain' },
+            body: 'An error occured whilst trying to return the blog list'
+        });
+    }
 }
 
 module.exports.deleteBlog =(event, context, callback) => {
