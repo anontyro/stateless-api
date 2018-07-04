@@ -1,7 +1,7 @@
 'use strict'
 require('dotenv').config()
 
-const blog = require('../blog/blog');
+const blog = require('./blog');
 
 module.exports.getBlogs =(event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;

@@ -1,6 +1,5 @@
 'use strict'
 var jwt = require('jsonwebtoken');
-var bcrypt = require('bcryptjs');
 require('dotenv').config()
 const connectToDatabase = require('../../connect');
 const User = require('../../models/auth/personSchema').Person;
