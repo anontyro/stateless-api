@@ -6,6 +6,11 @@ const resumeSchema = mongoose.Schema({
         required: true,
         default: Date.now
     },
+    currentlyActive: {
+        type: boolean,
+        required: true,
+        default: false
+    },
     startedCoding: {
         type: Date,
         required: true,
