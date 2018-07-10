@@ -80,6 +80,14 @@ module.exports.deleteResumeById = (id, callback) => {
         })
 }
 
+const findActiveResume = (callback) => {
+    
+    connectToDatabase()
+        .then(() => {
+            Resume.find
+        })
+}
+
 
 
 
