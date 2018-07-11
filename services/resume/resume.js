@@ -41,12 +41,15 @@ module.exports.getResume = (callback) => {
 module.exports.createResume = async (event, callback) => {
     const resume = JSON.parse(event.body);
     let currentActive;
+
     // check it is not set to active else look up and deactive
     if(resume.currentlyActive) {
         currentActive = await findActiveResume();
-        const success = await deactiveResumeById(currentActive._id);
-        if(!success) {
-            throw new Error('Unable to update resume: ' + currentActive);
+        if(currentActive) {
+            const success = await deactiveResumeById(currentActive._id);
+            if(!success) {
+                throw new Error('Unable to update resume: ' + currentActive);
+            }
         }
     }
 
@@ -57,8 +60,7 @@ module.exports.createResume = async (event, callback) => {
             message: 'successfully added a new resume'
         })
     })
-    
-    
+     
 }
 
 module.exports.patchResumeActive = (event, callback) => {

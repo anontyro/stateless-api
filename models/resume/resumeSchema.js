@@ -7,7 +7,7 @@ const resumeSchema = mongoose.Schema({
         default: Date.now
     },
     currentlyActive: {
-        type: boolean,
+        type: Boolean,
         required: true,
         default: false
     },

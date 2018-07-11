@@ -43,7 +43,9 @@ module.exports.createResume = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
     try{
-
+        resume.createResume(event, response =>{
+            callback(null,response);
+        });
     } catch(ex) {
         console.err(ex);
         callback(null, {
