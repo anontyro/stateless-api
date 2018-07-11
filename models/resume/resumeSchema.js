@@ -18,14 +18,17 @@ const resumeSchema = mongoose.Schema({
     },
     authorEmail: {
         type: String,
+        required: true,
         default: 'alexwilkinson@gmail.com'
     },
     currentLocation: {
         type: String,
+        required: true,
         default: 'Singapore'
     },
     lookingForWork: {
         type: Boolean,
+        required: true,
         default: true
     },
     currentlyLearning: {

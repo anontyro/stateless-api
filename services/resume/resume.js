@@ -38,10 +38,27 @@ module.exports.getResume = (callback) => {
         .catch(err => callback(err));
 }
 
-module.exports.createResume = (event, callback) => {
+module.exports.createResume = async (event, callback) => {
     const resume = JSON.parse(event.body);
-
+    let currentActive;
     // check it is not set to active else look up and deactive
+    if(resume.currentlyActive) {
+        currentActive = await findActiveResume();
+        const success = await deactiveResumeById(currentActive._id);
+        if(!success) {
+            throw new Error('Unable to update resume: ' + currentActive);
+        }
+    }
+
+    callback({
+        statusCode: 201,
+        body: JSON.stringify({
+            resume: await createNewResume(resume),
+            message: 'successfully added a new resume'
+        })
+    })
+    
+    
 }
 
 module.exports.patchResumeActive = (event, callback) => {
@@ -80,12 +97,32 @@ module.exports.deleteResumeById = (id, callback) => {
         })
 }
 
-const findActiveResume = (callback) => {
+const findActiveResume = () => {
     
     connectToDatabase()
         .then(() => {
-            Resume.find
+            return Resume.find({currentlyActive: true});
         })
+}
+
+const deactiveResumeById = (id) => {
+    connectToDatabase()
+        .then(() => {
+            return Resume.findByIdAndUpdate(id, {
+                currentlyActive: false
+            });
+        })
+}
+
+const createNewResume = (resume) => {
+    if(resume._id) {
+        throw new Error('Resume already exists use update method');
+    }
+
+    connectToDatabase()
+        .then(() => {
+            return Resume.create(resume);
+        });
 }
 
 
