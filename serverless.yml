@@ -141,6 +141,7 @@ functions:
         path: resumes
         method: get
         cors: true
+        authorizer: authorise
 
   getResume:
     handler: services/resume/handler.getResume

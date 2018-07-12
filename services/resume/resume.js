@@ -63,21 +63,50 @@ module.exports.createResume = async (event, callback) => {
      
 }
 
-module.exports.patchResumeActive = (event, callback) => {
+module.exports.patchResumeActive = async (event, callback) => {
     const resume = JSON.parse(event.body);
 
     // look up and find current active resume, deactivate it
-
+    if(resume.currentlyActive) {
+        currentActive = await findActiveResume();
+        if(currentActive) {
+            const success = await deactiveResumeById(currentActive._id);
+            if(!success) {
+                throw new Error('Unable to update resume: ' + currentActive);
+            }
+        }
+    }
     // then look up this resume and patch the active to true
 
 
 }
 
-module.exports.updateResume = (event, callback) => {
+module.exports.updateResumeById = (event, callback) => {
     const resume = JSON.parse(event.body);
 
-    // check it is not set to active else look up and deactive
+    if(!resume || !resume._id) {
+        throw new Error(`Resume or _id not present and can't be updated`);
+    }
 
+    // check it is not set to active else look up and deactive
+    if(resume.currentlyActive) {
+        currentActive = await findActiveResume();
+        if(currentActive && currentActive._id !== resume._id) {
+            const success = await deactiveResumeById(currentActive._id);
+            if(!success) {
+                throw new Error('Unable to update resume: ' + currentActive);
+            }
+        }
+    }
+
+    callback({
+        statusCode: 200,
+        body: JSON.stringify({
+            resume: '',
+            message: 'Successfully updated resume',
+            id: resume._id
+        })
+    })
 
 }
 
@@ -124,6 +153,17 @@ const createNewResume = (resume) => {
     connectToDatabase()
         .then(() => {
             return Resume.create(resume);
+        });
+}
+
+const updateResumeById = (resume) => {
+    if(resume.dateCreated) {
+        delete resume.dateCreated;
+    }
+    
+    connectToDatabase()
+        .then(() => {
+            return Resume.findByIdAndUpdate(resume._id, resume);
         });
 }
 
