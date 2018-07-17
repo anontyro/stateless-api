@@ -4,7 +4,6 @@ require('dotenv').config()
 const connectToDatabase = require('../../connect');
 const User = require('../../models/auth/personSchema').Person;
 const policyCreation = require('../../utils/auth/auth').buildIAMPolicy;
-
 const auth = require('../../services/auth/auth');
 
 /**
@@ -86,6 +85,16 @@ module.exports.getUsers = (event, context, callback) => {
 
 }
 
+/**
+ * Update user object
+ * this method allows the updating of certain parts of the user object
+ * Will prevent any password or email updated from this section
+ * as email is hashed and should only be accessiable via very select means it should
+ * not be easily changable
+ * @param {*} event 
+ * @param {*} context 
+ * @param {*} callback 
+ */
 module.exports.updateUser = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
 
@@ -103,10 +112,15 @@ module.exports.updateUser = (event, context, callback) => {
             })
         });       
     }
-
-
 }
 
+/**
+ * Requires a JSON object in the body containing {username, oldPassword, newPassword}
+ * old != new will perform validation and update if valid
+ * @param {*} event 
+ * @param {*} context 
+ * @param {*} callback 
+ */
 module.exports.updateUserPassword = (event, context, callback) => {
     context.callbackWaitsForEmptyEventLoop = false;
 

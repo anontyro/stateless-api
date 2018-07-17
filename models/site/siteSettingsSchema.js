@@ -1,3 +1,4 @@
+/** Currently not used but considered */
 const mongoose = require('mongoose');
 
 const siteSettingsSchema = mongoose.Schema({

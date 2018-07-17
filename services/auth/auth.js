@@ -103,6 +103,13 @@ module.exports.register = (event, callback) => {
 
 }
 
+/**
+ * Update method this will remove the password nad email if they exist in the object
+ * this is to prevent updating via this means
+ * returns a callback object containing a body that will list the update was completed successfully
+ * @param {*} user 
+ * @param {*} callback 
+ */
 module.exports.updateUser = (user, callback) => {
     
     const updateModel =  JSON.parse(JSON.stringify(user));
@@ -132,6 +139,13 @@ module.exports.updateUser = (user, callback) => {
     .catch(err => callback('unable to update user'));
 }
 
+/**
+ * Requires username (email) old and new password in a post request JSON object
+ * this then tests the user has correct details and that the old password != new password
+ * before rehashing and updating
+ * @param {*} event 
+ * @param {*} callback 
+ */
 module.exports.updatePassword = (event, callback) => {
     
     const {username, oldPassword, newPassword} = JSON.parse(event.body);    
