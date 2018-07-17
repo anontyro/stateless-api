@@ -97,12 +97,13 @@ module.exports.updateResumeById = (event, callback) => {
                 throw new Error('Unable to update resume: ' + currentActive);
             }
         }
+
     }
 
     callback({
         statusCode: 200,
         body: JSON.stringify({
-            resume: '',
+            resume: await updateResumeById(resume),
             message: 'Successfully updated resume',
             id: resume._id
         })
@@ -129,7 +130,6 @@ module.exports.deleteResumeById = (id, callback) => {
 }
 
 const findActiveResume = () => {
-    
     connectToDatabase()
         .then(() => {
             return Resume.find({currentlyActive: true});
@@ -160,7 +160,6 @@ const updateResumeById = (resume) => {
     if(resume.dateCreated) {
         delete resume.dateCreated;
     }
-    
     connectToDatabase()
         .then(() => {
             return Resume.findByIdAndUpdate(resume._id, resume);
