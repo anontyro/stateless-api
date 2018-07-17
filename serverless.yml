@@ -96,6 +96,14 @@ functions:
           path: blog
           method: get
           cors: true
+  
+  getAllBlogs:
+    handler: services/blog/handler.getAllBlogs
+    events:
+      - http:
+          path: blog/all
+          corse: true
+          authorizer: authorise
 
   getBlog:
     handler: services/blog/handler.getBlog

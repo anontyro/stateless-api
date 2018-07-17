@@ -1,3 +1,6 @@
+/**
+ * @class AUTH HANDLER
+ */
 'use strict'
 var jwt = require('jsonwebtoken');
 require('dotenv').config()

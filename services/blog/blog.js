@@ -4,10 +4,13 @@ require('dotenv').config()
 const util = require('../../utils/utils');
 const moment = require('moment');
 const connectToDatabase = require('../../connect');
-
 const Blog = require('../../models/blog/blogSchema').Blog;
 
-
+/**
+ * Method used to get a list of all the currently public blogs
+ * will filte out with the query those that should be hidden
+ * @param {*} callback 
+ */
 module.exports.getblogs = (callback) => {
     const dt = moment().toDate();
     const query = {
@@ -28,6 +31,30 @@ module.exports.getblogs = (callback) => {
         .catch(err => callback(err))
 }
 
+/**
+ * Admin version of getBlogs this returns everything
+ * in the blog table regardless of hidden or not
+ * @param {*} callback 
+ */
+module.exports.getAllBlogs = (callback) => {
+    connectToDatabase()
+        .then(() => {
+            Blog.find()
+                .then(blogList => callback({
+                    statusCode: 200,
+                    body: JSON.stringify({
+                        blogList: blogList
+                    })
+                }));
+        })
+        .catch(err => callback(err))
+};
+
+/**
+ * Uses the slug to return the specific blog post details
+ * @param {*} slug 
+ * @param {*} callback 
+ */
 module.exports.getBlog = (slug, callback) => {
 
     const query = {
@@ -47,6 +74,13 @@ module.exports.getBlog = (slug, callback) => {
         .catch(err => callback(err));
 }
 
+/**
+ * Ensures taht there is a title and body, makes sure that the body and title
+ * length are greater than 5 and 50 respectively, generates a basic slug
+ * that appends a random number to the end and ensure that number isn't in the database before continuing
+ * @param {*} event 
+ * @param {*} callback 
+ */
 module.exports.createBlog = (event, callback) => {
     const blog = JSON.parse(event.body);
 
@@ -79,6 +113,12 @@ module.exports.createBlog = (event, callback) => {
     });
 }
 
+/**
+ * Update method that removes the slug from the object if provided and updates the last modified date
+ * to now
+ * @param {*} event 
+ * @param {*} callback 
+ */
 module.exports.updateBlog = (event, callback) => {
     const blog = JSON.parse(event.body);
     if(blog.slug) { 
@@ -103,6 +143,12 @@ module.exports.updateBlog = (event, callback) => {
 
 }
 
+/**
+ * Required a valid id for the removal and returns the removed object and message along with blogId in the 
+ * body
+ * @param {*} id 
+ * @param {*} callback 
+ */
 module.exports.deleteBlogById = (id, callback) => {
     connectToDatabase()
         .then(() => {

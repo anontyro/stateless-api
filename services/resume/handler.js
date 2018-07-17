@@ -1,3 +1,6 @@
+/**
+ * @class Resume Handler
+ */
 'use strict'
 require('dotenv').config()
 

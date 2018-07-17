@@ -1,3 +1,7 @@
+/**
+ * @class Film Handler
+ * test class largely not in use currently
+ */
 'use strict';
 
 const connectToDatabase = require('../../connect');
