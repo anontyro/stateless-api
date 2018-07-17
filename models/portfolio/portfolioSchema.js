@@ -1,3 +1,7 @@
+/**
+ * Not currently in use
+ * need to consider best way to implement
+ */
 const mongoose = require('mongoose');
 
 const portfolioSchema = mongoose.Schema({

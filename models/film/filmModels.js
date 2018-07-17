@@ -1,3 +1,8 @@
+/**
+ * @class Film Schema
+ * Test class that pulls the data from the collection
+ * not really used
+ */
 const mongoose = require('mongoose');
 
 const filmModel = mongoose.Schema({
