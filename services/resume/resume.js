@@ -11,12 +11,11 @@ module.exports.getResumes = (callback) => {
     connectToDatabase()
         .then(() => {
             Resume.find()
-                .then(resumeList => callback({
-                    statusCode: 200,
-                    body: JSON.stringify({
-                        resumeList: resumeList
-                    })
-                }));
+                .then(resumeList => {
+                    const output = util.createCalback(200, {resumeList: resumeList});
+                    callback(output);
+                }
+            );
         })
         .catch(err => callback(err))
 }
@@ -28,12 +27,10 @@ module.exports.getResume = (callback) => {
     connectToDatabase()
         .then(() => {
             Resume.find(query)
-                .then(resume => callback({
-                    statusCode: 200,
-                    body: JSON.stringify({
-                        resume: resume
-                    })
-                }))
+                .then(resume => {
+                    const output = util.createCalback(200, {resume, resume});
+                    callback(output);
+                })
         })
         .catch(err => callback(err));
 }
@@ -52,15 +49,11 @@ module.exports.createResume = async (event, callback) => {
             }
         }
     }
-
-    callback({
-        statusCode: 201,
-        body: JSON.stringify({
-            resume: await createNewResume(resume),
-            message: 'successfully added a new resume'
-        })
-    })
-     
+    const output = util.createCalback(200, {
+        resume: await createNewResume(resume),
+        message: 'Successfully added a new resume'
+    });
+    callback(output);    
 }
 
 module.exports.patchResumeActive = async (event, callback) => {
@@ -99,16 +92,12 @@ module.exports.updateResumeById = (event, callback) => {
         }
 
     }
-
-    callback({
-        statusCode: 200,
-        body: JSON.stringify({
-            resume: await updateResumeById(resume),
-            message: 'Successfully updated resume',
-            id: resume._id
-        })
-    })
-
+    const output = util.createCalback(200, {
+        resume: await updateResumeById(resume),
+        message: 'Successfully updated resume',
+        id: resume._id
+    });
+    callback(output);
 }
 
 module.exports.deleteResumeById = (id, callback) => {
@@ -116,14 +105,12 @@ module.exports.deleteResumeById = (id, callback) => {
         .then(() => {
             Resume.findByIdAndRemove(id)
                 .then(removed => {
-                    callback({
-                        statusCode: 200,
-                        body: JSON.stringify({
-                            resumeId: id,
-                            message: 'successfully removed resume item',
-                            resume: removed
-                        })
-                    })
+                    const output = util.createCalback(200, {
+                        resumeId: id,
+                        message: 'Successfully removed resume item',
+                        resume: removed
+                    });
+                    callback(output);
                 })
                 .catch(ex => callback(ex))
         })
