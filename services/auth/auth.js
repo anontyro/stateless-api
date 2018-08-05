@@ -1,6 +1,7 @@
 'use strict'
-var jwt = require('jsonwebtoken');
-var bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const util = require('../../utils/utils');
 require('dotenv').config()
 const connectToDatabase = require('../../connect');
 
@@ -26,28 +27,30 @@ module.exports.login = (email, password, callback)  => {
             User.findOne({email: email})
                 .then(user => {
                     if(!user.verified){
-                        callback({
-                            statusCode: 401,
-                            body: JSON.stringify({
-                                error: 'user is not verified, unable to login',
-                                username: user.email
-                            })
-                        });
+                        const output = util.createCalback(401, {
+                            error: 'user is not verified, unable to login',
+                            username: user.email
+                        })
+                        callback(output);
                     }
                     const validate = bcrypt.compareSync(password, user.password);
                     if(!validate) {
-                        callback({
-                            statusCode: 401,
-                            body: JSON.stringify({
-                                error: 'password is not correct',
-                                username: user.email
-                            })
-                        });
+                        const output = util.createCalback(401, {
+                            error: 'password is not correct',
+                            username: user.email
+                        })
+                        callback(output);
                     }
                     const token = jwt.sign(
                         {id: user._id, username: user.email}, 
                         process.env.JWT_SECRET, {expiresIn: 86400});
-                    callback({statusCode: 200, body: JSON.stringify({auth: true, token: token})});
+
+                    const output = util.createCalback(200, {
+                        auth: true,
+                        token: token
+                    });
+                    console.log(output);
+                    callback(output);
                 })
                 .catch(ex =>{
                     throw new Error(ex);
