@@ -21,12 +21,10 @@ module.exports.getblogs = (callback) => {
     connectToDatabase()
         .then(() => {
             Blog.find(query)
-                .then(blogList => callback({
-                    statusCode: 200,
-                    body: JSON.stringify({
-                        blogList: blogList
-                    })
-                }));
+                .then(blogList => {
+                    const output = util.createCalback(200, {blogList: blogList});
+                    callback(output);
+                });
         })
         .catch(err => callback(err))
 }
@@ -40,12 +38,11 @@ module.exports.getAllBlogs = (callback) => {
     connectToDatabase()
         .then(() => {
             Blog.find()
-                .then(blogList => callback({
-                    statusCode: 200,
-                    body: JSON.stringify({
-                        blogList: blogList
-                    })
-                }));
+                .then(blogList =>  {
+                    const output = util.createCalback(200, {blogList: blogList});
+                    callback(output);
+                }
+            );
         })
         .catch(err => callback(err))
 };
@@ -64,12 +61,10 @@ module.exports.getBlog = (slug, callback) => {
     connectToDatabase()
         .then(() => {
             Blog.find(query)
-                .then(blog => callback({
-                    statusCode: 200,
-                    body: JSON.stringify({
-                        blog: blog
-                    })
-                }))
+                .then(blog => {
+                    const output = util.createCalback(200, {blog: blog});
+                    callback(output);
+                })
         })
         .catch(err => callback(err));
 }
@@ -100,13 +95,8 @@ module.exports.createBlog = (event, callback) => {
             .then(() => {
                 Blog.create(blog)
                     .then(response => {
-                        callback({
-                            statusCode: 201,
-                            body: JSON.stringify({
-                                blog: response,
-                                message: 'successfully create a new blog entry'
-                            })
-                        })
+                        const output = util.createCalback(200, {blog: response, message: 'Successfully created a new blog'});
+                        callback(output);
                     })
                     .catch(err => callback(err))
             })
@@ -131,12 +121,8 @@ module.exports.updateBlog = (event, callback) => {
         .then(() => {
             Blog.findByIdAndUpdate(blog._id, blog)
                 .then(updated => {
-                    callback({
-                        statusCode: 200,
-                        body: JSON.stringify({
-                            message: blog.title + ' has been successfully updated'
-                        })
-                    })
+                    const output = util.createCalback(200, {message: blog.title +  ' has been successfully updated'});
+                    callback(output);
                 })
         })
         .catch(err => callback('unable to update blog entry: ') + blog._id);
@@ -154,14 +140,12 @@ module.exports.deleteBlogById = (id, callback) => {
         .then(() => {
             Blog.findByIdAndRemove(id)
                 .then(removed => {
-                    callback({
-                        statusCode: 200,
-                        body: JSON.stringify({
-                            blogId: id,
-                            message: 'successfully removed blog from the database',
-                            blog: removed
-                        })
+                    const output = util.createCalback(200, {
+                        blogId: id,
+                        message: 'Successfully removed blog from the database',
+                        blog: removed
                     })
+                    callback(output);
                 })
                 .catch(ex => callback(ex))
         })
