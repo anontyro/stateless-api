@@ -110,7 +110,7 @@ functions:
     handler: services/blog/handler.getBlog
     events:  
       - http:
-          path: blog/{slug}
+          path: blog/find/{slug}
           method: get
           cors: true
 

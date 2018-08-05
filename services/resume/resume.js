@@ -74,7 +74,7 @@ module.exports.patchResumeActive = async (event, callback) => {
 
 }
 
-module.exports.updateResumeById = (event, callback) => {
+module.exports.updateResumeById = async (event, callback) => {
     const resume = JSON.parse(event.body);
 
     if(!resume || !resume._id) {
